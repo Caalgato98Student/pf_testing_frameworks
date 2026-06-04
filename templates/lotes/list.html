@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lotes{% endblock %}
+
+{% block nav_lotes %}active{% endblock %}
+
+{% block extra_css %}
+
+<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+ 
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-boxes text-primary mr-2"></i>Lotes activos
+        </h1>
+        <div>
+            <a href="{% url 'lotes_alerta' %}" class="btn btn-warning btn-sm shadow-sm mr-2">
+                <i class="fas fa-exclamation-triangle fa-sm text-white-50"></i> Ver alertas
+            </a>
+            <a href="{% url 'lote_create' %}" class="btn btn-primary btn-sm shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Nuevo lote
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Tabla de lotes -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-list mr-2"></i>Lista de lotes
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Fecha elaboración</th>
+                            <th>Días transcurridos</th>
+                            <th>Cantidad actual</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lote in lotes %}
+                        <tr>
+                            <td>{{ lote.id }}</td>
+                            <td>
+                                <i class="fas fa-cookie-bite text-primary mr-1"></i>
+                                {{ lote.producto.nombre }}
+                            </td>
+                            <td>{{ lote.fecha_elaboracion|date:"d/m/Y" }}</td>
+                            <td>
+                                {% with dias=lote.dias_transcurridos %}
+                                    {% if dias <= 7 %}
+                                        <span class="badge badge-success badge-pill">{{ dias }} días</span>
+                                    {% elif dias <= 10 %}
+                                        <span class="badge badge-warning badge-pill">{{ dias }} días</span>
+                                    {% else %}
+                                        <span class="badge badge-danger badge-pill">{{ dias }} días</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <span class="font-weight-bold">{{ lote.cantidad_actual }}</span> unidades
+                            </td>
+                            <td>
+                                {% if lote.activo %}
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check-circle mr-1"></i>Activo
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-secondary">
+                                        <i class="fas fa-pause-circle mr-1"></i>Inactivo
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'lote_edit' lote.pk %}" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'lote_delete' lote.pk %}" class="btn btn-danger btn-sm" title="Desactivar">
+                                        <i class="fas fa-pause-circle"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="py-4">
+                                    <i class="fas fa-boxes fa-3x text-gray-300 mb-3"></i>
+                                    <p class="text-gray-500">No hay lotes registrados</p>
+                                    <a href="{% url 'lote_create' %}" class="btn btn-primary">
+                                        <i class="fas fa-plus mr-2"></i>Crear primer lote
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+            "order": [[ 2, "desc" ]]
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,335 @@
+[
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 1,
+  "fields": {
+    "nombre": "Gelatinas chicas",
+    "descripcion": "Gelatinas de mosaico en vaso chico",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 2,
+  "fields": {
+    "nombre": "Rebanadas de pay",
+    "descripcion": "Pay de queso",
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 3,
+  "fields": {
+    "nombre": "Rebanada 3l cajeta",
+    "descripcion": "Biscocho de vainilla 3 leches con relleno de cajeta",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 4,
+  "fields": {
+    "nombre": "Rebanada marmoleado",
+    "descripcion": "Biscocho de vainilla con chocolate y bet·n de chocolate",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 5,
+  "fields": {
+    "nombre": "Pay grande",
+    "descripcion": "Pay de queso grande",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 6,
+  "fields": {
+    "nombre": "Gelatina grande",
+    "descripcion": "Gelatina de mosaico grande",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 7,
+  "fields": {
+    "nombre": "Pastel marmoleado chico",
+    "descripcion": "Biscocho de vainilla con chocolate y bet·n de chocolate",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 8,
+  "fields": {
+    "nombre": "Pastel grande de chocolate",
+    "descripcion": "Biscocho de chocolate con bet·n de chocolate",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 9,
+  "fields": {
+    "nombre": "Pastel grande marmoleado",
+    "descripcion": "Biscocho de vainilla con chocolate y bet·n de chocolate",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 10,
+  "fields": {
+    "nombre": "Pastel grande 3l cajeta",
+    "descripcion": "Biscocho de vainilla 3 leches con relleno de cajeta",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 11,
+  "fields": {
+    "nombre": "Pastel grande 3l cajeta con nuez",
+    "descripcion": "Biscocho de vainilla 3 leches con relleno de cajeta con nuez",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 12,
+  "fields": {
+    "nombre": "Pastel grande 3l durazno",
+    "descripcion": "Biscocho vainilla 3 leches con relleno de durazno",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.producto",
+  "pk": 13,
+  "fields": {
+    "nombre": "Pastel grande 3l pi±a con nuez",
+    "descripcion": "Biscocho vainilla 3 leches con relleno de pi±a con nuez",
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 1,
+  "fields": {
+    "producto": 1,
+    "fecha_elaboracion": "2025-08-21",
+    "fecha_entrada": "2025-08-25T23:45:40.091Z",
+    "cantidad_inicial": 8,
+    "cantidad_actual": 3,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 2,
+  "fields": {
+    "producto": 2,
+    "fecha_elaboracion": "2025-08-10",
+    "fecha_entrada": "2025-08-26T00:13:00.241Z",
+    "cantidad_inicial": 8,
+    "cantidad_actual": 4,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 3,
+  "fields": {
+    "producto": 2,
+    "fecha_elaboracion": "2025-08-17",
+    "fecha_entrada": "2025-08-26T00:16:55.538Z",
+    "cantidad_inicial": 10,
+    "cantidad_actual": 5,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 4,
+  "fields": {
+    "producto": 3,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T00:18:23.878Z",
+    "cantidad_inicial": 8,
+    "cantidad_actual": 8,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 5,
+  "fields": {
+    "producto": 4,
+    "fecha_elaboracion": "2025-08-19",
+    "fecha_entrada": "2025-08-26T19:04:33.161Z",
+    "cantidad_inicial": 8,
+    "cantidad_actual": 6,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 6,
+  "fields": {
+    "producto": 5,
+    "fecha_elaboracion": "2025-08-14",
+    "fecha_entrada": "2025-08-26T19:05:07.059Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 0,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 7,
+  "fields": {
+    "producto": 6,
+    "fecha_elaboracion": "2025-08-22",
+    "fecha_entrada": "2025-08-26T19:07:47.446Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 0,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 8,
+  "fields": {
+    "producto": 7,
+    "fecha_elaboracion": "2025-08-18",
+    "fecha_entrada": "2025-08-26T19:08:45.738Z",
+    "cantidad_inicial": 4,
+    "cantidad_actual": 3,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 9,
+  "fields": {
+    "producto": 8,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T19:11:37.903Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 1,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 10,
+  "fields": {
+    "producto": 9,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T19:12:53.835Z",
+    "cantidad_inicial": 2,
+    "cantidad_actual": 2,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 11,
+  "fields": {
+    "producto": 9,
+    "fecha_elaboracion": "2025-08-20",
+    "fecha_entrada": "2025-08-26T19:13:06.616Z",
+    "cantidad_inicial": 2,
+    "cantidad_actual": 1,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 12,
+  "fields": {
+    "producto": 10,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T19:13:46.112Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 0,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 13,
+  "fields": {
+    "producto": 12,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T19:14:26.334Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 0,
+    "activo": false
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 14,
+  "fields": {
+    "producto": 13,
+    "fecha_elaboracion": "2025-08-25",
+    "fecha_entrada": "2025-08-26T19:14:39.636Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 1,
+    "activo": true
+  }
+},
+{
+  "model": "inventario_reposteria.lote",
+  "pk": 15,
+  "fields": {
+    "producto": 6,
+    "fecha_elaboracion": "2025-08-27",
+    "fecha_entrada": "2025-08-29T01:39:28.403Z",
+    "cantidad_inicial": 1,
+    "cantidad_actual": 1,
+    "activo": true
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$vYXka4SQiz0vYPR14pjwuJ$7Pz2ZKwc7WoBzqaRCE/tTKaEaac+CYC/k5PbSjtiEsE=",
+    "last_login": "2025-08-29T02:07:28.212Z",
+    "is_superuser": true,
+    "username": "test",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-08-25T22:17:13.223Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$VTyG765G2L4TPdUNpMmntf$kbpyGMD0+0ee1llVV/kMmB9sLxngz9+ZwkmsfpH1oJY=",
+    "last_login": "2025-08-29T02:26:27.566Z",
+    "is_superuser": false,
+    "username": "Prueba",
+    "first_name": "Usuario",
+    "last_name": "Prueba",
+    "email": "lisid73194@cavoyar.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-08-29T02:06:00.133Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

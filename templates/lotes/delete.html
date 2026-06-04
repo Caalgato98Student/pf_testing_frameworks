@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Desactivar lote{% endblock %}
+
+{% block nav_lotes %}active{% endblock %}
+
+{% block content %}
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-pause-circle text-warning mr-2"></i>Desactivar lote
+        </h1>
+        <a href="{% url 'lotes_list' %}" class="btn btn-secondary btn-sm shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Volver a lotes
+        </a>
+    </div>
+
+    <!-- Confirmación para desactivar lote-->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4 border-left-warning">
+                <div class="card-header py-3 bg-warning">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>Confirmar desactivación de lote
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-boxes fa-5x text-warning mb-3"></i>
+                        <h4 class="text-gray-800">¿Estás seguro de desactivar este lote?</h4>
+                    </div>
+                    
+                    <!-- Información del lote -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fas fa-info-circle mr-2"></i>Información del lote
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>ID del lote:</strong> #{{ lote.id }}</p>
+                                    <p><strong>Producto:</strong> {{ lote.producto.nombre }}</p>
+                                    <p><strong>Fecha de elaboración:</strong> {{ lote.fecha_elaboracion|date:"d/m/Y" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Días transcurridos:</strong> 
+                                        {% with dias=lote.dias_transcurridos %}
+                                            {% if dias <= 10 %}
+                                                <span class="badge badge-success">{{ dias }} días</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">{{ dias }} días</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </p>
+                                    <p><strong>Cantidad actual:</strong> {{ lote.cantidad_actual }} unidades</p>
+                                    <p><strong>Estado actual:</strong> 
+                                        {% if lote.activo %}
+                                            <span class="badge badge-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">Inactivo</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alertas según los días transcurridos -->
+                    {% with dias=lote.dias_transcurridos %}
+                        {% if dias > 10 %}
+                            <div class="alert alert-danger" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-skull-crossbones mr-2"></i>¡Producto vencido!
+                                </h6>
+                                <hr>
+                                <p class="mb-0">
+                                    Este lote tiene <strong>{{ dias }} días</strong> de elaboración. 
+                                    Se recomienda <strong>retirarlo inmediatamente</strong>
+                                </p>
+                            </div>
+                        {% elif dias > 7 %}
+                            <div class="alert alert-warning" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>Producto próximo a vencer
+                                </h6>
+                                <hr>
+                                <p class="mb-0">
+                                    Este lote tiene {{ dias }} días de elaboración. 
+                                </p>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-info-circle mr-2"></i>Producto en buen Estado
+                                </h6>
+                                <hr>
+                                <p class="mb-0">
+                                    Este lote tiene {{ dias }} días de elaboración. 
+                                    Aún está en buen estado, ¿estás seguro de desactivarlo?
+                                </p>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="alert alert-secondary" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-lightbulb mr-2"></i>Nota:</h6>
+                        <hr>
+                        <p class="mb-0">
+                            <strong>Desactivar</strong> un lote significa que ya no estará disponible para venta, 
+                            pero se mantendrá el registro. Puedes consultarlo en la sección de <strong>lotes desactivados</strong>.
+                        </p>
+                    </div>
+
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning mr-2">
+                            <i class="fas fa-pause-circle mr-2"></i>Sí, desactivar Lote
+                        </button>
+                        <a href="{% url 'lotes_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lotes desactivados{% endblock %}
+
+{% block nav_lotes %}active{% endblock %}
+{% block nav_lotes_show %}show{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-pause-circle text-warning mr-2"></i>Lotes desactivados
+        </h1>
+        <div>
+            <a href="{% url 'lotes_list' %}" class="btn btn-success btn-sm shadow-sm mr-2">
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Ver lotes activos
+            </a>
+            <a href="{% url 'lote_create' %}" class="btn btn-primary btn-sm shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Nuevo lote
+            </a>
+        </div>
+    </div>
+
+    {% if lotes %}
+    <div class="alert alert-info" role="alert">
+        <p class="mb-0">
+            <i class="fas fa-undo mr-1"></i>
+            Puedes <strong>reactivar</strong> cualquier lote siempre que su producto esté activo.
+        </p>
+    </div>
+    {% endif %}
+    <!-- Tabla de lotes desactivados -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-warning">
+            <h6 class="m-0 font-weight-bold text-white">
+                <i class="fas fa-list mr-2"></i>Lista de lotes desactivados
+            </h6>
+        </div>
+        <div class="card-body">
+            {% if lotes %}
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="table-warning">
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Fecha elaboración</th>
+                            <th>Días transcurridos</th>
+                            <th>Cantidad actual</th>
+                            <th>Estado producto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lote in lotes %}
+                        <tr>
+                            <td>{{ lote.id }}</td>
+                            <td>
+                                <i class="fas fa-cookie-bite {% if lote.producto.activo %}text-success{% else %}text-secondary{% endif %} mr-1"></i>
+                                <strong>{{ lote.producto.nombre }}</strong>
+                            </td>
+                            <td>{{ lote.fecha_elaboracion|date:"d/m/Y" }}</td>
+                            <td>
+                                {% with dias=lote.dias_transcurridos %}
+                                    {% if dias <= 10 %}
+                                        <span class="badge badge-success badge-pill">{{ dias }} días</span>
+                                    {% elif dias <= 15 %}
+                                        <span class="badge badge-warning badge-pill">{{ dias }} días</span>
+                                    {% else %}
+                                        <span class="badge badge-danger badge-pill">{{ dias }} días</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <span class="font-weight-bold text-secondary">{{ lote.cantidad_actual }}</span> unidades
+                            </td>
+                            <td>
+                                {% if lote.producto.activo %}
+                                    <span class="badge badge-success">Producto activo</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Producto desactivado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    {% if lote.producto.activo %}
+                                        <a href="{% url 'lote_reactivar' lote.pk %}" class="btn btn-success btn-sm" title="Reactivar lote">
+                                            <i class="fas fa-undo"></i> Reactivar
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-secondary btn-sm" disabled title="El producto debe estar activo">
+                                            <i class="fas fa-ban"></i> No disponible
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-smile-beam fa-5x text-success mb-3"></i>
+                <h4 class="text-success">¡No hay lotes desactivados!</h4>
+                <p class="text-muted">Todos los lotes están activos en el inventario.</p>
+                <a href="{% url 'lotes_list' %}" class="btn btn-primary">
+                    <i class="fas fa-boxes mr-2"></i>Ver lotes activos
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+            },
+            "order": [[ 0, "desc" ]] // Ordenar por ID descendente
+        });
+    });
+</script>
+{% endblock %}

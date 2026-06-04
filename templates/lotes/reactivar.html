@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Reactivar lote{% endblock %}
+
+{% block nav_lotes %}active{% endblock %}
+
+{% block content %}
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Reactivar lote</h1>
+        <a href="{% url 'lotes_desactivados' %}" class="btn btn-secondary btn-sm shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Volver a desactivados
+        </a>
+    </div>
+
+    <!-- Confirmación de reactivación de lote -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            {% if producto_activo %}
+            <div class="card shadow mb-4 border-left-success">
+                <div class="card-header py-3 bg-success">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-undo mr-2"></i>Confirmar reactivación
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-boxes fa-5x text-success mb-3"></i>
+                        <h4 class="text-gray-800">¿Reactivar este lote?</h4>
+                    </div>
+                    
+                    <!-- Información del lote que se va a reactivar -->
+                    <div class="alert alert-info" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle mr-2"></i>Información del lote:</h6>
+                        <hr>
+                        <p class="mb-0"><strong>Producto:</strong> {{ lote.producto.nombre }}</p>
+                        <p class="mb-0"><strong>Fecha de elaboración:</strong> {{ lote.fecha_elaboracion|date:"d/m/Y" }}</p>
+                        <p class="mb-0"><strong>Cantidad actual:</strong> {{ lote.cantidad_actual }} unidades</p>
+                        <p class="mb-0"><strong>Días transcurridos:</strong> {{ lote.dias_transcurridos }} días</p>
+                    </div>
+
+                    <!-- Información para la reactivación -->
+                    <div class="alert alert-success" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-check-circle mr-2"></i>¿Qué sucederá?</h6>
+                        <hr>
+                        <p class="mb-0">Al reactivar este lote:</p>
+                        <ul class="mb-0 mt-2">
+                            <li><strong>Aparecerá nuevamente</strong> en el inventario activo</li>
+                            <li><strong>Se contabilizará</strong> en el stock total del producto</li>
+                            <li><strong>Estará disponible</strong> para la gestión de inventario</li>
+                            <li><strong>Podrás editarlo y gestionarlo</strong> normalmente</li>
+                        </ul>
+                    </div>
+
+                    <!-- Alerta de confirmación de reactivación -->
+                    {% if lote.dias_transcurridos > 10 %}
+                    <div class="alert alert-warning" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle mr-2"></i>¡Atención!</h6>
+                        <p class="mb-0">
+                            Este lote tiene <strong>{{ lote.dias_transcurridos }} días</strong> desde su elaboración. 
+                            Considera revisar su estado antes de reactivarlo para la venta.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Confirmación de reactivación de lote -->
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success mr-2">
+                            <i class="fas fa-undo mr-2"></i>Sí, reactivar lote
+                        </button>
+                        <a href="{% url 'lotes_desactivados' %}" class="btn btn-secondary">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </a>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <!-- Validación de reactivación de lote cuando un producto esta desactivado -->
+            <div class="card shadow mb-4 border-left-danger">
+                <div class="card-header py-3 bg-danger">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-ban mr-2"></i>No se puede reactivar
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-ban fa-5x text-danger mb-3"></i>
+                        <h4 class="text-gray-800">Producto desactivado</h4>
+                    </div>
+                    
+                    <div class="alert alert-danger" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle mr-2"></i>No se puede reactivar este lote</h6>
+                        <hr>
+                        <p class="mb-0">El producto <strong>"{{ lote.producto.nombre }}"</strong> está desactivado.</p>
+                        <p class="mb-0 mt-2">Para reactivar este lote, primero debes reactivar el producto desde la sección "Productos desactivados".</p>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{% url 'productos_desactivados' %}" class="btn btn-warning mr-2">
+                            <i class="fas fa-undo mr-2"></i>Ir a Productos desactivados
+                        </a>
+                        <a href="{% url 'lotes_desactivados' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    </div>
+
+    <!-- Alerta para productos de más de 10 días -->
+    {% if lotes_alerta > 0 %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle mr-2"></i>
+        <strong>¡Atención!</strong> Tienes <strong>{{ lotes_alerta }}</strong> lote(s) con más de 10 días de elaboración.
+        <a href="{% url 'lotes_alerta' %}" class="alert-link">Ver detalles</a>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- Inventario de productos -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Inventario de productos</h6>
+                    <div>
+                        <a href="{% url 'producto_create' %}" class="btn btn-success btn-sm mr-2">Agregar producto</a>
+                        <a href="{% url 'lote_create' %}" class="btn btn-primary btn-sm">Agregar lote</a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if productos_inventario %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-center">Stock actual</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in productos_inventario %}
+                                <tr id="producto-{{ producto.id }}">
+                                    <td>
+                                        <i class="fas fa-cookie-bite text-primary mr-2"></i>
+                                        <strong>{{ producto.nombre }}</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if producto.stock_total > 0 %}
+                                            <span class="stock-cantidad badge badge-primary badge-pill" 
+                                                  style="font-size: 1.1em; padding: 8px 12px;">
+                                                <span id="stock-{{ producto.id }}">{{ producto.stock_total }}</span> unidades
+                                            </span>
+                                        {% else %}
+                                            <span class="stock-cantidad badge badge-secondary badge-pill" 
+                                                  style="font-size: 1.1em; padding: 8px 12px;">
+                                                <span id="stock-{{ producto.id }}">{{ producto.stock_total }}</span> unidades
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if producto.stock_total > 0 %}
+                                            <button type="button" 
+                                                    class="btn btn-danger btn-sm btn-vender" 
+                                                    data-producto-id="{{ producto.id }}"
+                                                    title="Vender 1 unidad">
+                                                <i class="fas fa-minus mr-1"></i>Vender
+                                            </button>
+                                        {% else %}
+                                            <button type="button" 
+                                                    class="btn btn-secondary btn-sm" 
+                                                    disabled
+                                                    title="Sin stock disponible">
+                                                <i class="fas fa-times mr-1"></i>Sin stock
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-boxes fa-3x text-gray-300 mb-3"></i>
+                        <p class="text-gray-500">No hay productos con stock disponible</p>
+                        <div>
+                            <a href="{% url 'producto_create' %}" class="btn btn-primary mr-2">Agregar Producto</a>
+                            <a href="{% url 'lote_create' %}" class="btn btn-success">Agregar Lote</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajustarInventario(productoId, accion) {
+    // Deshabilitar botón temporalmente
+    const boton = document.querySelector(`button[data-producto-id="${productoId}"]`);
+    if (boton) {
+        boton.disabled = true;
+        const textoOriginal = boton.innerHTML;
+        boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        
+        fetch(`/inventario/${productoId}/${accion}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Actualizar el stock en la interfaz
+                const stockElement = document.getElementById(`stock-${productoId}`);
+                if (stockElement) {
+                    stockElement.textContent = data.nuevo_stock;
+                }
+                
+                // Si stock llega a 0, deshabilitar botón permanentemente
+                if (data.nuevo_stock <= 0) {
+                    boton.innerHTML = '<i class="fas fa-times mr-1"></i>Sin stock';
+                    boton.className = 'btn btn-secondary btn-sm';
+                    boton.disabled = true;
+                    
+                    // Cambiar el badge a sin stock
+                    const stockBadge = document.querySelector(`#producto-${productoId} .stock-cantidad`);
+                    if (stockBadge) {
+                        stockBadge.className = 'stock-cantidad badge badge-secondary badge-pill';
+                    }
+                } else {
+                    // Restaurar botón normal
+                    boton.innerHTML = textoOriginal;
+                    boton.disabled = false;
+                }
+                
+                mostrarMensaje(data.mensaje, 'success');
+            } else {
+                // Restaurar botón en caso de error
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+                mostrarMensaje(data.mensaje, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Restaurar botón en caso de error
+            boton.innerHTML = textoOriginal;
+            boton.disabled = false;
+            mostrarMensaje('Error al procesar la venta', 'error');
+        });
+    }
+}
+
+function mostrarMensaje(mensaje, tipo) {
+    const alertClass = tipo === 'success' ? 'alert-success' : 'alert-danger';
+    const icon = tipo === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 300px;">
+            <i class="${icon} mr-2"></i>
+            ${mensaje}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', alertHtml);
+    
+    // Auto-ocultar después de 3 segundos
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if (alert) {
+            alert.remove();
+        }
+    }, 3000);
+}
+
+// Vincular eventos click de forma no intrusiva
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-vender').forEach(button => {
+        button.addEventListener('click', function() {
+            const productoId = this.getAttribute('data-producto-id');
+            ajustarInventario(productoId, 'decrementar');
+        });
+    });
+});
+</script>
+{% endblock %}
