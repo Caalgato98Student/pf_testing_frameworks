@@ -62,3 +62,35 @@ El sistema viene precargado con los siguientes usuarios de prueba para facilitar
 ### Usuario administrador (Acceso total al sistema y panel de Django)
 * **Usuario:** `test`
 * **Contraseña:** `test_admin`
+
+---
+
+## Ejecución de Pruebas Unitarias y Cobertura
+
+El proyecto está configurado para ejecutar pruebas utilizando `pytest` y medir la cobertura con `coverage`. Las pruebas utilizan de forma automática una base de datos SQLite en memoria para agilizar la ejecución y evitar problemas de configuración en la base de datos MariaDB de desarrollo.
+
+### 1. Ejecutar las pruebas con pytest
+Para correr las pruebas unitarias:
+```bash
+docker compose exec web pytest inventario_reposteria/
+```
+
+### 2. Medir la cobertura (Coverage)
+Para ejecutar las pruebas y recolectar las estadísticas de cobertura:
+```bash
+docker compose exec web coverage run -m pytest inventario_reposteria/
+```
+
+### 3. Ver el reporte de cobertura en consola
+Para mostrar el reporte consolidado directamente en tu terminal:
+```bash
+docker compose exec web coverage report
+```
+
+### 4. Generar reporte interactivo HTML
+Para generar un reporte visual e interactivo:
+```bash
+docker compose exec web coverage html
+```
+Esto creará una carpeta llamada `htmlcov/` en la raíz de tu proyecto. Puedes abrir el archivo `htmlcov/index.html` en tu navegador web para inspeccionar qué líneas de código han sido probadas.
+
